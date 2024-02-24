@@ -2,7 +2,7 @@
 let currentWordIndex = 0;
 let words = [];
 let wordsFound = 0;
-
+let hasWon = false;
 
 
 
@@ -60,16 +60,20 @@ function loadWordList(url, count) {
 loadWordList('https://matula.github.io/infinite-craft-extension/json/premade/easy.json');
 
 // Create the bar element
+// Create the parent div
+const parentDiv = document.createElement('div');
+parentDiv.id = 'word-bar-container';
+document.body.insertBefore(parentDiv, document.body.firstChild);
+
+// Create the bar element
 const bar = document.createElement('div');
 bar.id = 'random-word-bar';
-document.body.style.marginTop = '50px'; // Adjust body margin to accommodate the bar
-document.body.insertBefore(bar, document.body.firstChild);
+parentDiv.appendChild(bar); // Append bar to the parent div
 
+// Create the word list element
 const wordListElement = document.createElement('div');
 wordListElement.id = 'word-list-element';
-wordListElement.style.fontSize = 'small';
-wordListElement.style.marginTop = '10px';
-document.body.insertBefore(wordListElement, bar.nextSibling);
+parentDiv.appendChild(wordListElement); // Append wordListElement to the parent div
 
 function updateWordListDisplay() {
     wordListElement.innerHTML = words.map((word, index) => {
@@ -81,10 +85,8 @@ function updateWordListDisplay() {
 // Function to update the bar with the current word
 function updateBar() {
     bar.textContent = `Find this word: ${words[currentWordIndex]}`;
-    updateWordListDisplay();
 }
 
-let hasWon = false;
 
 // Function to check all items for the current word
 function checkItemsForWord() {
@@ -109,6 +111,7 @@ function checkItemsForWord() {
                 item.classList.add('item-highlight'); // Highlight the item
                 wordFound = true;
                 wordsFound++;
+                updateWordListDisplay();
             }
         }
     });
@@ -116,14 +119,12 @@ function checkItemsForWord() {
     // Move to the next word if the current word is found
     if (wordFound && currentWordIndex < words.length - 1) {
         currentWordIndex++;
-        updateBar(); // Update the bar with the new word
     }
 
     if (wordsFound === words.length) {
         console.log(hasWon);
         if (!hasWon) {
             hasWon = true;
-            updateBar();
             alert('You win!'); // Display a message
             wordsFound = 0;
         }
