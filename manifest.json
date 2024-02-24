@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Infinite Craft Word Game",
+  "version": "1.0",
+  "description": "Find the selected word in Infinite Craft",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "userScripts"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://neal.fun/infinite-craft/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "style.css"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "/icons/48.png",
+    "128": "/icons/128.png"
+  }
+}
+
