@@ -1,6 +1,7 @@
 // List of words to find
 let currentWordIndex = 0;
 let words = [];
+let wordsFound = 0;
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -86,6 +87,7 @@ function checkItemsForWord() {
             if (itemText === currentWordLowerCase) {
                 item.classList.add('item-highlight'); // Highlight the item
                 wordFound = true;
+                wordsFound++;
             }
         }
     });
@@ -94,6 +96,11 @@ function checkItemsForWord() {
     if (wordFound && currentWordIndex < words.length - 1) {
         currentWordIndex++;
         updateBar(); // Update the bar with the new word
+    }
+
+    if (wordsFound === words.length) {
+        alert('You win!'); // Display a message
+        wordsFound = 0;
     }
 }
 
