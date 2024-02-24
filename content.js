@@ -3,6 +3,9 @@ let currentWordIndex = 0;
 let words = [];
 let wordsFound = 0;
 
+
+
+
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     let count = 10;
@@ -48,6 +51,7 @@ function loadWordList(url, count) {
             clearHighlights();
             updateBar(); // Update the bar with the first word from the new list
             checkItemsForWord(); // Check the items for the new word
+            updateWordListDisplay();
         })
         .catch(error => console.error('Error loading word list:', error));
 }
@@ -61,15 +65,32 @@ bar.id = 'random-word-bar';
 document.body.style.marginTop = '50px'; // Adjust body margin to accommodate the bar
 document.body.insertBefore(bar, document.body.firstChild);
 
+const wordListElement = document.createElement('div');
+wordListElement.id = 'word-list-element';
+wordListElement.style.fontSize = 'small';
+wordListElement.style.marginTop = '10px';
+document.body.insertBefore(wordListElement, bar.nextSibling);
+
+function updateWordListDisplay() {
+    wordListElement.innerHTML = words.map((word, index) => {
+        return index < currentWordIndex ? `<s>${word}</s>` : word;
+    }).join(', ');
+}
+
+
 // Function to update the bar with the current word
 function updateBar() {
     bar.textContent = `Find this word: ${words[currentWordIndex]}`;
+    updateWordListDisplay();
 }
+
+let hasWon = false;
 
 // Function to check all items for the current word
 function checkItemsForWord() {
     const items = document.querySelectorAll('.item');
     let wordFound = false;
+
     const currentWordLowerCase = words[currentWordIndex].toLowerCase();
 
     items.forEach(item => {
@@ -99,8 +120,13 @@ function checkItemsForWord() {
     }
 
     if (wordsFound === words.length) {
-        alert('You win!'); // Display a message
-        wordsFound = 0;
+        console.log(hasWon);
+        if (!hasWon) {
+            hasWon = true;
+            updateBar();
+            alert('You win!'); // Display a message
+            wordsFound = 0;
+        }
     }
 }
 
