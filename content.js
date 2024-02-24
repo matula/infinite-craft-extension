@@ -1,6 +1,29 @@
 // List of words to find
-const words = ["Water", "Earth", "Titanic", "Ice Cream", "Hot Air Balloon"];
 let currentWordIndex = 0;
+let words = [];
+
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.url) {
+        loadWordList(request.url);
+    }
+});
+
+// Function to load a word list from an external JSON file
+function loadWordList(url) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            words = data; // Update the words array with the loaded list
+            currentWordIndex = 0; // Reset the index to the first word
+            updateBar(); // Update the bar with the first word from the new list
+            checkItemsForWord(); // Check the items for the new word
+        })
+        .catch(error => console.error('Error loading word list:', error));
+}
+
+// Load the default word list when the page first loads
+loadWordList('https://matula.github.io/infinite-craft-extension/default.json');
 
 // Create the bar element
 const bar = document.createElement('div');

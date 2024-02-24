@@ -1,6 +1,6 @@
 document.getElementById('word-list').addEventListener('change', function() {
     const listId = this.value;
-    const url = `https://github.io/myrepo/${listId}.js`;
+    const url = `https://matula.github.io/infinite-craft-extension/${listId}.json`;
 
     // Send a message to the content script with the URL of the selected word list
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
