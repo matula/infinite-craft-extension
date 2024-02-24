@@ -4,8 +4,13 @@ let words = [];
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    let count = 10;
+    if (request.count) {
+        count = request.count;
+    }
+
     if (request.url) {
-        loadWordList(request.url);
+        loadWordList(request.url, count);
     }
 });
 
@@ -23,18 +28,18 @@ function selectRandomWords(wordList, count = 10) {
     return shuffled.slice(0, count);
 }
 
-function loadWordList(url) {
+function loadWordList(url, count) {
     let isRandom = false;
     if (url === 'random') {
         isRandom = true;
-        url = 'https://matula.github.io/infinite-craft-extension/infinite_craft_words.json';
+        url = 'https://matula.github.io/infinite-craft-extension/json/infinite_craft_words.json';
     }
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (isRandom) {
-                words = selectRandomWords(data); // Select 10 random words
+                words = selectRandomWords(data, count); // Select 10 random words
             } else {
                 words = data; // Use the entire list
             }
@@ -47,7 +52,7 @@ function loadWordList(url) {
 }
 
 // Load the default word list when the page first loads
-loadWordList('https://matula.github.io/infinite-craft-extension/01.json');
+loadWordList('https://matula.github.io/infinite-craft-extension/json/premade/easy.json');
 
 // Create the bar element
 const bar = document.createElement('div');
