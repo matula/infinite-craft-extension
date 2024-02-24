@@ -3,19 +3,40 @@ let currentWordIndex = 0;
 let words = [];
 
 // Listen for messages from the popup
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.url) {
         loadWordList(request.url);
     }
 });
 
-// Function to load a word list from an external JSON file
+// Function to clear highlights from all items
+function clearHighlights() {
+    const highlightedItems = document.querySelectorAll('.item-highlight');
+    highlightedItems.forEach(item => {
+        item.classList.remove('item-highlight');
+    });
+}
+
+function selectRandomWords(wordList, count = 10) {
+    const shuffled = wordList.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
 function loadWordList(url) {
+    if (url === 'random') {
+        url = 'https://matula.github.io/infinite-craft-extension/infinite_craft_words.json';
+    }
+
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            words = data; // Update the words array with the loaded list
+            if (url === 'random') {
+                words = selectRandomWords(data); // Select 10 random words
+            } else {
+                words = data; // Use the entire list
+            }
             currentWordIndex = 0; // Reset the index to the first word
+            clearHighlights();
             updateBar(); // Update the bar with the first word from the new list
             checkItemsForWord(); // Check the items for the new word
         })
@@ -23,7 +44,7 @@ function loadWordList(url) {
 }
 
 // Load the default word list when the page first loads
-loadWordList('https://matula.github.io/infinite-craft-extension/default.json');
+loadWordList('https://matula.github.io/infinite-craft-extension/01.json');
 
 // Create the bar element
 const bar = document.createElement('div');
