@@ -18,19 +18,22 @@ function clearHighlights() {
 }
 
 function selectRandomWords(wordList, count = 10) {
-    const shuffled = wordList.sort(() => 0.5 - Math.random());
+    // shuffle the wordList
+    let shuffled = wordList.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
 
 function loadWordList(url) {
+    let isRandom = false;
     if (url === 'random') {
+        isRandom = true;
         url = 'https://matula.github.io/infinite-craft-extension/infinite_craft_words.json';
     }
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            if (url === 'random') {
+            if (isRandom) {
                 words = selectRandomWords(data); // Select 10 random words
             } else {
                 words = data; // Use the entire list

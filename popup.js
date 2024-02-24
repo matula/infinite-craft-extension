@@ -1,9 +1,10 @@
 document.getElementById('word-list').addEventListener('change', function () {
     const listId = this.value;
+    let url = '';
     if (listId === 'random') {
-        const url = 'random';
+        url = 'random';
     } else {
-        const url = `https://matula.github.io/infinite-craft-extension/${listId}.json`;
+        url = `https://matula.github.io/infinite-craft-extension/${listId}.json`;
     }
     // Send a message to the content script with the URL of the selected word list
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
