@@ -47,3 +47,9 @@ document.getElementById('submit-custom').addEventListener('click', function() {
         chrome.tabs.sendMessage(tabs[0].id, {url: url, count: wordCount});
     });
 });
+
+document.getElementById('toggle-mode').addEventListener('click', function() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {toggleMode: true});
+    });
+});
