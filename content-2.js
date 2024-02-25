@@ -25,25 +25,23 @@ function updateDisplay() {
     }).join(', ');
 }
 
-function getInfiniteCraftData() {
-    const dataString = localStorage.getItem('infinite-craft-data');
-    const data = dataString ? JSON.parse(dataString) : {};
-    return data.elements || [];
-}
 
 function checkItemsForWord() {
-    const infiniteCraftData = getInfiniteCraftData();
+    document.querySelectorAll('.item').forEach(item => {
+        // Clone the item and remove the .item-emoji element
+        const itemClone = item.cloneNode(true);
+        const emoji = itemClone.querySelector('.item-emoji');
+        if (emoji) {
+            itemClone.removeChild(emoji);
+        }
+        const itemText = itemClone.textContent.trim().toLowerCase();
 
-    infiniteCraftData.forEach((item, index) => {
-        const itemText = item.text.toLowerCase();
-
-        words.forEach((word, wordIndex) => {
-            if (itemText === word.toLowerCase() && !foundWords.includes(wordIndex)) {
-                if (listMode || (!listMode && wordIndex === currentWordIndex)) {
-                    foundWords.push(wordIndex);
-                    if (!listMode) {
-                        currentWordIndex++;
-                    }
+        words.forEach((word, index) => {
+            if (itemText === word.toLowerCase() && !foundWords.includes(index)) {
+                item.classList.add('item-highlight');
+                foundWords.push(index);
+                if (!listMode && index === currentWordIndex) {
+                    currentWordIndex++;
                 }
             }
         });
