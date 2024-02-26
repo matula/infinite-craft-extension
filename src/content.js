@@ -44,6 +44,20 @@ function checkItemsForWord() {
                     if (!listMode) {
                         currentWordIndex++;
                     }
+
+                    // Highlight the item in the DOM
+                    document.querySelectorAll('.item').forEach(domItem => {
+                        // Clone the domItem and remove the .item-emoji element
+                        const domItemClone = domItem.cloneNode(true);
+                        const emojiSpan = domItemClone.querySelector('.item-emoji');
+                        if (emojiSpan) {
+                            domItemClone.removeChild(emojiSpan);
+                        }
+                        // Compare the text content of the clone with the word
+                        if (domItemClone.textContent.trim().toLowerCase() === itemText) {
+                            domItem.classList.add('item-highlight');
+                        }
+                    });
                 }
             }
         });

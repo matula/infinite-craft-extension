@@ -4,9 +4,7 @@
   "version": "1.0",
   "description": "Find the selected word in Infinite Craft",
   "permissions": [
-    "activeTab",
-    "storage",
-    "userScripts"
+    "activeTab"
   ],
   "content_scripts": [
     {
