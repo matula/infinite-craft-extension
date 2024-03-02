@@ -17,6 +17,53 @@ const wordListElement = document.createElement('div');
 wordListElement.id = 'word-list-element';
 parentDiv.appendChild(wordListElement);
 
+// Create a new button element for downloading words
+const downloadButton = document.createElement('button');
+downloadButton.textContent = 'Download Found Words';
+downloadButton.id = 'download-words';
+
+// Create a new button element for loading words
+const loadButton = document.createElement('button');
+loadButton.textContent = 'Load Words';
+loadButton.id = 'load-words';
+
+// Append the buttons to the body
+document.body.appendChild(downloadButton);
+document.body.appendChild(loadButton);
+
+// Add an event listener to the download button
+downloadButton.addEventListener('click', function() {
+    const data = localStorage.getItem('infinite-craft-data');
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'infinite-craft-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+// Add an event listener to the load button
+loadButton.addEventListener('click', function() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result;
+                localStorage.setItem('infinite-craft-data', data);
+                window.location.reload();
+            };
+            reader.readAsText(file);
+        }
+    };
+    input.click();
+});
+
+
 function updateDisplay() {
     bar.textContent = listMode ? 'Find any of these words:' : `Find this word: ${words[currentWordIndex]}`;
     wordListElement.innerHTML = words.map((word, index) => {
